@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 
 const ReportSchema = mongoose.Schema({
+    user: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User',
+        immutable: true, 
+    },
     firstName: {
         type: String,
         default: null,
@@ -15,12 +20,7 @@ const ReportSchema = mongoose.Schema({
         type: Date,
         required: true
     },
-    bloodGroup: {
-        type: String,
-        default: null,
-        required: true
-    },
-    Sex: {
+    sex: {
         type: String,
         default: null,
         required: true
@@ -30,7 +30,7 @@ const ReportSchema = mongoose.Schema({
         default: null,
         required: true
     },
-    email: {
+    bloodGroup: {
         type: String,
         default: null,
         required: true
@@ -43,20 +43,17 @@ const ReportSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    email: {
+        type: String,
+        default: null,
+        required: true
+    },
     phoneNumber: {
         type: String,
         default: null,
         required: true
     },
     address: {
-        type: String,
-        required: true
-    },
-    city: {
-        type: String,
-        required: true
-    },
-    country: {
         type: String,
         default: null,
         required: true
@@ -74,6 +71,18 @@ const ReportSchema = mongoose.Schema({
         type: String,
         default: null,
         required: true
+    },
+    pneumothorax: {
+        type: Boolean,
+        default: false,
+        required: true,
+        immutable: true,
+    },
+    diagnosis: {
+        type: String,
+        default: 'none',
+        required: true,
+        immutable: true,
     }
 }, {
     timestamps: true,
