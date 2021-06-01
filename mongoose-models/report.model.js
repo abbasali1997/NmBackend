@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 
 const ReportSchema = mongoose.Schema({
+    imageType: {
+        type: String,
+        default: null,
+        required: true,
+    },
     user: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User',

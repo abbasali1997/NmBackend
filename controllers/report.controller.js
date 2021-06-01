@@ -66,8 +66,10 @@ exports.createReport = async (req, res) => {
         return;
     }
 
+    const reportData = req.body.reportData;
+
     const report = await reportService.create({
-        ...req.body.reportData,
+        ...reportData,
         user: userId,
     });
     res.status(200).json(report);

@@ -6,10 +6,11 @@ const api = require('./api');
 
 const app = express();
 
+app.use(express.static('uploads'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(bodyParser.json())
-app.use(cookieParser())
+app.use(bodyParser.json());
+app.use(cookieParser());
 app.use('/api', api);
 
 module.exports = app;
