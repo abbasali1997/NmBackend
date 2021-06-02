@@ -135,7 +135,7 @@ exports.deleteReport = async (req, res) => {
         return;
     }
 
-    if (report.user.id != userId) {
+    if (report.user != userId) {
         res.status(403).json({ success: false, message: 'You are not authorized to perform this operation.' });
         return;
     }

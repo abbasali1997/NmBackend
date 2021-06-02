@@ -58,10 +58,10 @@ exports.update = async (id, reportData) => {
     }
 }
 
-exports.delete = async (id, reportData) => {
+exports.delete = async (id) => {
     try {
-        const updatedReport = await Report.updateOne({_id: id}, reportData);
-        return updatedReport;
+        const deletedReport = await Report.deleteOne({_id: id});
+        return deletedReport;
     }
     catch (error) {
 		console.error("error in ReportService.update()", error);
