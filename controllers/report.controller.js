@@ -1,6 +1,6 @@
 const reportService = require('../services/report.service');
 const User = require('../mongoose-models/user.model');
-const { formatPaged } = require('../util/paged-result.utility');
+const { getPaged } = require('../util/paged-result.utility');
 
 exports.getAll =  async (req, res) => {
     const userId = req.query.userId;
@@ -14,11 +14,11 @@ exports.getAll =  async (req, res) => {
         res.status(404).json({ success: false, message: `User with id ${userId} not found.` });
         return;
     }
-    
-    const { mongoQuery, mongoOptions } = req;
+    const { page } = req.query;
+    const { mongoQuery } = req;
     mongoQuery.$and.push({ user: userId });
-	const [reports, rowCount] = await reportService.getPaginated({ filter: mongoQuery, options: mongoOptions });
-	const paged = formatPaged(reports, { ...mongoOptions, rowCount });
+	const reports = await reportService.getAll({ filter: mongoQuery });
+	const paged = getPaged(reports, page || 1);
 	res.status(200).json(paged);
 	return;
 }

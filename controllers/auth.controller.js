@@ -13,7 +13,10 @@ exports.login = async (req, res) => {
 }
 
 exports.register = async (req, res) => {
-    const userPayload = await authService.create(req.body);
-    res.json(userPayload);
-    return;
+    try{        
+        const userPayload = await authService.create(req.body);
+        res.json({ success: true, userData: userPayload });
+    } catch (err) {
+        res.json({ success: false, msg: e.message });
+    }
 }
