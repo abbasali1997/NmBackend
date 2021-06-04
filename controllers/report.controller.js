@@ -1,8 +1,12 @@
 const reportService = require('../services/report.service');
+const puppeteer = require('puppeteer');
+const Handlebars = require('handlebars');
+const Path = require('path')
+const fs = require('fs');
 const User = require('../mongoose-models/user.model');
-const { formatPaged } = require('../util/paged-result.utility');
+const { getPaged } = require('../util/paged-result.utility');
 
-exports.getAll =  async (req, res) => {
+exports.getAll = async (req, res) => {
     const userId = req.query.userId;
     if (!userId) {
         res.status(401).json({ success: false, message: 'No user logged In.' });
@@ -14,13 +18,13 @@ exports.getAll =  async (req, res) => {
         res.status(404).json({ success: false, message: `User with id ${userId} not found.` });
         return;
     }
-    
-    const { mongoQuery, mongoOptions } = req;
+    const { page } = req.query;
+    const { mongoQuery } = req;
     mongoQuery.$and.push({ user: userId });
-	const [reports, rowCount] = await reportService.getPaginated({ filter: mongoQuery, options: mongoOptions });
-	const paged = formatPaged(reports, { ...mongoOptions, rowCount });
-	res.status(200).json(paged);
-	return;
+    const reports = await reportService.getAll({ filter: mongoQuery });
+    const paged = getPaged(reports, page || 1);
+    res.status(200).json(paged);
+    return;
 }
 
 exports.getOne = async (req, res) => {
@@ -42,7 +46,7 @@ exports.getOne = async (req, res) => {
         res.status(403).json({ success: false, message: 'You are not authorized to perform this operation.' });
         return;
     }
-    
+
     res.status(200).json(report || null);
     return;
 }
@@ -143,5 +147,18 @@ exports.deleteReport = async (req, res) => {
     await reportService.delete(reportId);
 
     res.status(200).json({ success: true });
+    return;
+}
+
+exports.getPDF = async (req, res) => {
+    const { reportData } = req.body;
+    reportData.pneumothorax = (reportData.pneumothorax) ? 'Detected' : 'Not detected';
+    reportData.DOB = new Date(Date.parse(reportData.DOB)).toLocaleDateString();
+    const filename = Path.join(__dirname, '../templates/report.hbs');
+    const source = fs.readFileSync(filename, 'utf8').toString();
+    const template = Handlebars.compile(source);
+    const htmlPage = template(data);
+    res.sendFile(htmlPage);
+
     return;
 }

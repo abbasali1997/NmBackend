@@ -5,6 +5,7 @@ const {
     deleteReport,
     getAll,
     getOne,
+    getPDF,
 } = require('../controllers/report.controller');
 const {
     reportsQb,
@@ -17,5 +18,6 @@ router.get('/:id', [], getOne);
 router.post('/', upload.single('file'), createReport);
 router.put('/', [], updateReport);
 router.delete('/:id', [], deleteReport);
+router.post('/:id', [], getPDF);
 
 module.exports = router;

@@ -1,6 +1,6 @@
 const Report = require('../mongoose-models/report.model');
 
-const getAll = async ({ filter, options }) => {
+exports.getAll = async ({ filter, options }) => {
 	try {
 		return Report.find(filter, { 
 			firstName: 1, 
